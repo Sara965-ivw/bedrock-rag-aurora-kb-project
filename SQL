@@ -1,0 +1,26 @@
+-- Enable vector + uuid extensions (safe if already enabled)
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Schema for Bedrock integration
+CREATE SCHEMA IF NOT EXISTS bedrock_integration;
+
+-- Table Bedrock will use as its vector store
+CREATE TABLE IF NOT EXISTS bedrock_integration.bedrock_kb (
+    id        uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    chunks    text,
+    metadata  jsonb,
+    embedding vector(1536)
+);
+
+SELECT * FROM pg_extension;
+
+
+SELECT
+    table_schema || '.' || table_name AS show_tables
+FROM
+    information_schema.tables
+WHERE
+    table_type = 'BASE TABLE'
+AND
+    table_schema = 'bedrock_integration';
